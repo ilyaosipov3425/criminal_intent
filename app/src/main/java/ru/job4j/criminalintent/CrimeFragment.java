@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import java.text.DateFormat;
+
 import ru.job4j.criminalintent.model.Crime;
 
 /**
@@ -58,7 +60,9 @@ public class CrimeFragment extends Fragment {
         });
 
         mDateButton = v.findViewById(R.id.crime_date);
-        mDateButton.setText(mCrime.getDate().toString());
+        String dateFormat = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.MEDIUM)
+                .format(mCrime.getDate());
+        mDateButton.setText(dateFormat);
         mDateButton.setEnabled(false);
 
         mSolvedCheckBox = v.findViewById(R.id.crime_solved);
