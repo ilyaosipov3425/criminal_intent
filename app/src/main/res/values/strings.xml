@@ -7,4 +7,8 @@
     <string name="crime_details_label">Details</string>
     <string name="crime_solved_label">Solved</string>
 
+    <!-- String Button -->
+    <string name="first_page">First page</string>
+    <string name="last_page">Last page</string>
+
 </resources>
