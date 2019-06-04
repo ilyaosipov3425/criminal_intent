@@ -33,12 +33,15 @@ public class CrimeFragment extends Fragment {
 
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "DialogDate";
+    private static final String DIALOG_TIME = "DialogTime";
 
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_TIME = 1;
 
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
+    private Button mTimeButton;
     private CheckBox mSolvedCheckBox;
 
     public static CrimeFragment newInstance(UUID crimeId) {
@@ -65,12 +68,13 @@ public class CrimeFragment extends Fragment {
         if (requestCode == REQUEST_DATE) {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
-            updateDate(mCrime.getDate().toString());
+            updateDate();
         }
-    }
-
-    private void updateDate(String s) {
-        mDateButton.setText(s);
+        if (requestCode == REQUEST_TIME) {
+            Date date = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
+            mCrime.setDate(date);
+            updateTime();
+        }
     }
 
     @Override
@@ -97,13 +101,13 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-
-
         mDateButton = v.findViewById(R.id.crime_date);
-        String dateFormat = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.MEDIUM)
-                .format(mCrime.getDate());
-        updateDate(dateFormat);
+        updateDate();
         mDateButton.setOnClickListener(this::onClickDate);
+
+        mTimeButton = v.findViewById(R.id.crime_time);
+        updateTime();
+        mTimeButton.setOnClickListener(this::onClickTime);
 
         mSolvedCheckBox = v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
@@ -119,5 +123,23 @@ public class CrimeFragment extends Fragment {
                 .newInstance(mCrime.getDate());
         dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
         dialog.show(manager, DIALOG_DATE);
+    }
+
+    private void onClickTime(View v) {
+        FragmentManager manager = getFragmentManager();
+        TimePickerFragment dialog = TimePickerFragment
+                .newInstance(mCrime.getDate());
+        dialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
+        dialog.show(manager, DIALOG_TIME);
+    }
+
+    private void updateDate() {
+        mDateButton.setText(DateFormat.getDateInstance(DateFormat.FULL)
+                .format(mCrime.getDate()));
+    }
+
+    private void updateTime() {
+        mTimeButton.setText(DateFormat.getTimeInstance(DateFormat.MEDIUM)
+                .format(mCrime.getDate()));
     }
 }

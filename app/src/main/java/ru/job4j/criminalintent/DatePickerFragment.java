@@ -2,7 +2,6 @@ package ru.job4j.criminalintent;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -58,11 +57,12 @@ public class DatePickerFragment extends DialogFragment {
                 .setTitle(R.string.date_picker_title)
                 .setPositiveButton(android.R.string.ok,
                         (dialog, which) -> {
-                            int year1 = mDatePicker.getYear();
-                            int month1 = mDatePicker.getMonth();
-                            int day1 = mDatePicker.getDayOfMonth();
-                            Date date1 = new GregorianCalendar(year1, month1, day1).getTime();
-                            sendResult(Activity.RESULT_OK, date1);
+                            int yearDialog = mDatePicker.getYear();
+                            int monthDialog = mDatePicker.getMonth();
+                            int dayDialog = mDatePicker.getDayOfMonth();
+                            Date dateDialog = new GregorianCalendar
+                                    (yearDialog, monthDialog, dayDialog).getTime();
+                            sendResult(Activity.RESULT_OK, dateDialog);
                         })
                 .create();
     }
