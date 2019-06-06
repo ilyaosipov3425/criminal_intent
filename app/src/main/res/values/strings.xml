@@ -2,6 +2,16 @@
     <string name="app_name">Criminal Intent</string>
     <string name="date_picker_title">Date of crime:</string>
     <string name="time_picker_title">Time of crime:</string>
+    <string name="new_crime">New Crime</string>
+    <string name="show_subtitle">Show Subtitle</string>
+    <string name="hide_subtitle">Hide Subtitle</string>
+    <string name="delete_crime">Delete Crime</string>
+    <string name="empty_list_view">List is empty, create a first crime</string>
+
+    <plurals name="subtitle_plural">
+        <item quantity="one">%1$d crime</item>
+        <item quantity="other">%1$d crimes</item>
+    </plurals>
 
     <!-- String CrimeFragment -->
     <string name="crime_title_hint">Enter a title for the crime.</string>
