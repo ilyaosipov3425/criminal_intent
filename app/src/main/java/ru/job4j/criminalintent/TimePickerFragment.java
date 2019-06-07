@@ -69,6 +69,7 @@ public class TimePickerFragment extends DialogFragment {
         if (getTargetFragment() == null) {
             return;
         }
+
         Intent intent = new Intent();
         intent.putExtra(EXTRA_TIME, date);
         getTargetFragment()
