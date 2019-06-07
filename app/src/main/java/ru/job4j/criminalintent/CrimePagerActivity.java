@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 import ru.job4j.criminalintent.model.Crime;
-import ru.job4j.criminalintent.model.CrimeLab;
+import ru.job4j.criminalintent.database.CrimeLab;
 
 /**
  * Класс CrimePagerActivity - позволяет "листать" элементы списка, проводя пальцом по экрану

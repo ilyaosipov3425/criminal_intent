@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import ru.job4j.criminalintent.model.Crime;
-import ru.job4j.criminalintent.model.CrimeLab;
+import ru.job4j.criminalintent.database.CrimeLab;
 
 /**
  * Класс CrimeFragment - выдает подробную информацию о конкретном преступлении и ее обновление при модификации пользователем
@@ -164,5 +164,13 @@ public class CrimeFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        CrimeLab.get(getActivity())
+                .updateCrime(mCrime);
     }
 }

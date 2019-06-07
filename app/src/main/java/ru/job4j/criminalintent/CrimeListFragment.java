@@ -22,7 +22,7 @@ import java.text.DateFormat;
 import java.util.List;
 
 import ru.job4j.criminalintent.model.Crime;
-import ru.job4j.criminalintent.model.CrimeLab;
+import ru.job4j.criminalintent.database.CrimeLab;
 
 /**
  * Класс CrimeListFragment - выдает списковое представление преступление
@@ -74,6 +74,7 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
+            mAdapter.setCrimes(crimes);
             mAdapter.notifyDataSetChanged();
         }
 
@@ -144,6 +145,10 @@ public class CrimeListFragment extends Fragment {
                 mButtonEmpty.setVisibility(View.INVISIBLE);
             }
             return mCrimes.size();
+        }
+
+        public void setCrimes(List<Crime> crimes) {
+            mCrimes = crimes;
         }
     }
 
