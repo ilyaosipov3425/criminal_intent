@@ -27,7 +27,7 @@
                 android:layout_height="80dp"
                 android:scaleType="centerInside"
                 android:cropToPadding="true"
-                android:background="@android:color/darker_gray"
+                android:background="@color/colorPrimary"
                 tools:ignore="ContentDescription"/>
 
             <ImageButton
@@ -35,6 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_camera"
+                android:background="@color/colorPrimaryDark"
                 tools:ignore="ContentDescription" />
 
 

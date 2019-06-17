@@ -1,10 +1,17 @@
 package ru.job4j.criminalintent;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -145,6 +152,10 @@ public class CrimeListFragment extends Fragment {
         public void onBindViewHolder(@NonNull CrimeHolder holder, int position) {
             Crime crime = mCrimes.get(position);
             holder.bind(crime);
+
+            if ((position % 2) == 0) {
+                holder.itemView.setBackgroundColor(Color.parseColor("#fff8e1"));
+            }
         }
 
         @Override
@@ -211,10 +222,46 @@ public class CrimeListFragment extends Fragment {
                         Crime crime = mAdapter.mCrimes.get(position);
                         mDeleteCallback.onCrimeIdSelected(crime.getId());
                     }
+
+                    @Override
+                    public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                            @NonNull RecyclerView.ViewHolder viewHolder,
+                                            float dX, float dY, int actionState,
+                                            boolean isCurrentlyActive) {
+                        View itemView = viewHolder.itemView;
+
+                        Drawable deleteIcon = ContextCompat.getDrawable(getContext(),
+                                R.drawable.ic_menu_delete);
+                        float iconHeight = deleteIcon.getIntrinsicHeight();
+                        float iconWidth = deleteIcon.getMinimumWidth();
+                        float itemHeight = itemView.getBottom() - itemView.getTop();
+
+                        Resources resources = getResources();
+                        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                        paint.setColor(resources.getColor(R.color.colorAccent));
+                        RectF layout = new RectF(itemView.getLeft(), itemView.getTop(),
+                                itemView.getRight(), itemView.getBottom());
+                        c.drawRect(layout, paint);
+
+                        int deleteIconTop = (int) (itemView.getTop() + (itemHeight - iconHeight) / 2);
+                        int deleteIconBottom = (int) (deleteIconTop + iconHeight);
+                        int deleteIconMargin = (int) ((itemHeight - iconHeight) / 2);
+                        int deleteIconLeft = (int) (itemView.getRight() - deleteIconMargin - iconWidth);
+                        int deleteIconRight = itemView.getRight() - deleteIconMargin;
+
+                        deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight,
+                                deleteIconBottom);
+                        deleteIcon.draw(c);
+
+                        getDefaultUIUtil().onDraw(c, recyclerView, viewHolder.itemView,
+                                dX, dY, actionState, isCurrentlyActive);
+                    }
                 };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
         itemTouchHelper.attachToRecyclerView(mCrimeRecyclerView);
     }
+
+
 
     public void deleteCrime(UUID crimeId) {
         Crime crime = CrimeLab.get(getActivity()).getCrime(crimeId);
