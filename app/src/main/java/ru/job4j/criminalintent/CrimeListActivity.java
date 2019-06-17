@@ -3,6 +3,8 @@ package ru.job4j.criminalintent;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
+import java.util.UUID;
+
 import ru.job4j.criminalintent.model.Crime;
 
 /**
@@ -13,7 +15,8 @@ import ru.job4j.criminalintent.model.Crime;
  */
 
 public class CrimeListActivity extends SingleFragmentActivity
-        implements CrimeListFragment.Callbacks, CrimeFragment.Callbacks {
+        implements CrimeListFragment.Callbacks, CrimeFragment.Callbacks,
+        CrimeListFragment.OnDeleteCrimeListener {
 
     @Override
     protected Fragment createFragment() {
@@ -44,5 +47,21 @@ public class CrimeListActivity extends SingleFragmentActivity
         CrimeListFragment listFragment = (CrimeListFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         listFragment.updateUI();
+    }
+
+    @Override
+    public void onCrimeIdSelected(UUID crimeId) {
+        CrimeFragment crimeFragment = (CrimeFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.detail_fragment_container);
+        CrimeListFragment listFragment = (CrimeListFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_container);
+        listFragment.deleteCrime(crimeId);
+        listFragment.updateUI();
+        if (crimeFragment != null) {
+            listFragment.getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .hide(crimeFragment)
+                    .commit();
+        }
     }
 }
