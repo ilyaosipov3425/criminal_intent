@@ -3,6 +3,10 @@
     package="ru.job4j.criminalintent">
     
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-feature android:name="android.hardware.camera"
+        android:required="false"/>
 
     <application
         android:allowBackup="true"
@@ -20,8 +24,16 @@
         </activity>
         <activity
             android:name=".CrimePagerActivity"
-            android:parentActivityName=".CrimeListActivity">
-        </activity>
+            android:parentActivityName=".CrimeListActivity"/>
+        <provider
+            android:authorities="ru.job4j.criminalintent.fileprovider"
+            android:name="android.support.v4.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/files"/>
+        </provider>
     </application>
 
 </manifest>
