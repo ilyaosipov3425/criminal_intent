@@ -25,7 +25,8 @@ import ru.job4j.criminalintent.database.CrimeLab;
  * @version $Id$
  */
 
-public class CrimePagerActivity extends AppCompatActivity {
+public class CrimePagerActivity extends AppCompatActivity
+        implements CrimeFragment.Callbacks {
 
     private static final String EXTRA_CRIME_ID = "ru.job4j.criminalintent.crime_id";
     private ViewPager mViewPager;
@@ -107,5 +108,9 @@ public class CrimePagerActivity extends AppCompatActivity {
 
     private void onLastClick(View v) {
         mViewPager.setCurrentItem(mViewPager.getAdapter().getCount() - 1);
+    }
+
+    @Override
+    public void onCrimeUpdate(Crime crime) {
     }
 }

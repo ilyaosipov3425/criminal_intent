@@ -1,6 +1,7 @@
 package ru.job4j.criminalintent;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -73,6 +74,11 @@ public class CrimeFragment extends Fragment {
     private CheckBox mSolvedCheckBox;
     private ImageView mPhotoView;
     private ImageButton mPhotoButton;
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void onCrimeUpdate(Crime crime);
+    }
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -100,11 +106,13 @@ public class CrimeFragment extends Fragment {
         if (requestCode == REQUEST_DATE) {
             date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
+            updateCrime();
             updateDate();
         }
         if (requestCode == REQUEST_TIME) {
             date = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
             mCrime.setDate(date);
+            updateCrime();
             updateTime();
         } else if (requestCode == REQUEST_CONTACT && data != null) {
             Uri contactUri = data.getData();
@@ -123,6 +131,7 @@ public class CrimeFragment extends Fragment {
                 String suspect = cursorContact.getString(0);
                 String contactId = cursorContact.getString(1);
                 mCrime.setSuspect(suspect);
+                updateCrime();
                 mSuspectButton.setText(suspect);
 
                 Cursor cursorPhone = getActivity()
@@ -138,6 +147,7 @@ public class CrimeFragment extends Fragment {
                     String number = cursorPhone.getString(cursorPhone.getColumnIndex(Phone.NUMBER));
                     if (number != null) {
                         mCallButton.setText(number);
+                        updateCrime();
                         mCrime.setNumber(number);
                     } else {
                         mCallButton.setText(R.string.no_number);
@@ -154,6 +164,7 @@ public class CrimeFragment extends Fragment {
                     mPhotoFile);
             getActivity().revokeUriPermission(uri,
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            updateCrime();
             updatePhotoView();
         }
     }
@@ -175,6 +186,7 @@ public class CrimeFragment extends Fragment {
             public void onTextChanged(
                     CharSequence s, int start, int before, int count) {
                 mCrime.setTitle(s.toString());
+                updateCrime();
             }
 
             @Override
@@ -193,7 +205,10 @@ public class CrimeFragment extends Fragment {
         mSolvedCheckBox = v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
         mSolvedCheckBox.setOnCheckedChangeListener(
-                (buttonView, isChecked) -> mCrime.setSolved(isChecked));
+                (buttonView, isChecked) -> {
+                    mCrime.setSolved(isChecked);
+                    updateCrime();
+                });
 
         mReportButton = v.findViewById(R.id.crime_report);
         mReportButton.setOnClickListener(this::onClickReport);
@@ -317,6 +332,11 @@ public class CrimeFragment extends Fragment {
                 .format(mCrime.getDate()));
     }
 
+    private void updateCrime() {
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+        mCallbacks.onCrimeUpdate(mCrime);
+    }
+
     private String getCrimeReport() {
         String solvedString;
         if (mCrime.isSolved()) {
@@ -375,5 +395,17 @@ public class CrimeFragment extends Fragment {
 
         CrimeLab.get(getActivity())
                 .updateCrime(mCrime);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
     }
 }
