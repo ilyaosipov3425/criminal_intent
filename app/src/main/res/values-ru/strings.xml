@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Criminal Intent</string>
+    <string name="date_picker_title">Дата преступления:</string>
+    <string name="time_picker_title">Время преступления:</string>
+    <string name="new_crime">Новое преступление</string>
+    <string name="show_subtitle">Показать подзаголовок</string>
+    <string name="hide_subtitle">Скрыть подзаголовок</string>
+    <string name="delete_crime">Удалить преступление</string>
+    <string name="empty_list_view">Создайте первое преступление</string>
+    <string name="call_tel">tel: %s</string>
+    <string name="no_number">Номер отсутствует</string>
+
+    <plurals name="subtitle_plural">
+        <item quantity="one">%1$d преступление</item>
+        <item quantity="few">%1$d престпления</item>
+        <item quantity="many">%1$d преступлений</item>
+        <item quantity="other">%1$d преступлений</item>
+    </plurals>
+
+    <!-- String CrimeFragment -->
+    <string name="crime_title_hint">Введите название.</string>
+    <string name="crime_title_label">Название</string>
+    <string name="crime_details_label">Подробности</string>
+    <string name="crime_solved_label">Раскрыто</string>
+
+    <!-- String Button -->
+    <string name="first_page">Первая страница</string>
+    <string name="last_page">Последняя страница</string>
+    <string name="crime_suspect_text">Выбрать подозреваемого</string>
+    <string name="crime_report_text">Отправить отчёт</string>
+    <string name="crime_call_suspect">Позвонить подозреваемому</string>
+
+    <!-- String report -->
+    <string name="crime_report">%1$s
+      Преступление было обнаружено %2$s %3$s, %4$s
+    </string>
+    <string name="crime_report_solved">Дело раскрыто</string>
+    <string name="crime_report_unsolved">Дело не раскрыто</string>
+    <string name="crime_report_suspect">подозреваемый %s.</string>
+    <string name="crime_report_no_suspect">подозвераемого нет.</string>
+    <string name="crime_report_subject">CriminalIntent Отчёт о преступлении</string>
+    <string name="send_report">Отправить отчёт о преступлении через</string>
+
+</resources>

@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_camera"
                 android:background="@color/colorPrimaryDark"
+                android:padding="8dp"
                 tools:ignore="ContentDescription" />
 
 

@@ -34,10 +34,10 @@ public class CrimeListActivity extends SingleFragmentActivity
             Intent intent = CrimePagerActivity.newIntent(this, crime.getId());
             startActivity(intent);
         } else {
-            Fragment newDatail = CrimeFragment.newInstance(crime.getId());
+            Fragment newDetail = CrimeFragment.newInstance(crime.getId());
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_fragment_container, newDatail)
+                    .replace(R.id.detail_fragment_container, newDetail)
                     .commit();
         }
     }
