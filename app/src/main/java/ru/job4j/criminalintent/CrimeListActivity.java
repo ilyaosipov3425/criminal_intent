@@ -3,6 +3,7 @@ package ru.job4j.criminalintent;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import ru.job4j.criminalintent.model.Crime;
@@ -46,7 +47,7 @@ public class CrimeListActivity extends SingleFragmentActivity
     public void onCrimeUpdate(Crime crime) {
         CrimeListFragment listFragment = (CrimeListFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        listFragment.updateUI();
+        Objects.requireNonNull(listFragment).updateUI();
     }
 
     @Override
@@ -55,10 +56,11 @@ public class CrimeListActivity extends SingleFragmentActivity
                 .findFragmentById(R.id.detail_fragment_container);
         CrimeListFragment listFragment = (CrimeListFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container);
-        listFragment.deleteCrime(crimeId);
+        Objects.requireNonNull(listFragment).deleteCrime(crimeId);
         listFragment.updateUI();
         if (crimeFragment != null) {
-            listFragment.getActivity().getSupportFragmentManager()
+            Objects.requireNonNull(listFragment.getActivity())
+                    .getSupportFragmentManager()
                     .beginTransaction()
                     .hide(crimeFragment)
                     .commit();

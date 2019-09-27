@@ -75,6 +75,7 @@ public class CrimeFragment extends Fragment {
     private ImageView mPhotoView;
     private ImageButton mPhotoButton;
     private Callbacks mCallbacks;
+    private FragmentManager mManager;
 
     public interface Callbacks {
         void onCrimeUpdate(Crime crime);
@@ -92,6 +93,7 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() == null) return;
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
@@ -118,13 +120,13 @@ public class CrimeFragment extends Fragment {
             Uri contactUri = data.getData();
             String[] queryFields = new String[]{ContactsContract.Contacts.DISPLAY_NAME,
                     ContactsContract.Contacts._ID};
-            Cursor cursorContact = getActivity()
+            if (getActivity() == null) return;
+            try (Cursor cursorContact = getActivity()
                     .getContentResolver()
                     .query(Objects.requireNonNull(contactUri),
                             queryFields,
-                            null, null, null);
-            try {
-                if (cursorContact.getCount() == 0) {
+                            null, null, null)) {
+                if (Objects.requireNonNull(cursorContact).getCount() == 0) {
                     return;
                 }
                 cursorContact.moveToFirst();
@@ -134,13 +136,12 @@ public class CrimeFragment extends Fragment {
                 updateCrime();
                 mSuspectButton.setText(suspect);
 
-                Cursor cursorPhone = getActivity()
+                try (Cursor cursorPhone = getActivity()
                         .getContentResolver()
                         .query(Phone.CONTENT_URI, null,
                                 String.format("%s = %s", Phone.CONTACT_ID, contactId),
-                                null, null);
-                try {
-                    if (cursorPhone.getCount() == 0) {
+                                null, null)) {
+                    if (Objects.requireNonNull(cursorPhone).getCount() == 0) {
                         return;
                     }
                     cursorPhone.moveToFirst();
@@ -152,13 +153,10 @@ public class CrimeFragment extends Fragment {
                     } else {
                         mCallButton.setText(R.string.no_number);
                     }
-                } finally {
-                    cursorPhone.close();
                 }
-            } finally {
-                cursorContact.close();
             }
         } else if (requestCode == REQUEST_PHOTO) {
+            if (getActivity() == null) return;
             Uri uri = FileProvider.getUriForFile(getActivity(),
                     "ru.job4j.criminalintent.fileprovider",
                     mPhotoFile);
@@ -232,7 +230,7 @@ public class CrimeFragment extends Fragment {
             mCallButton.setText(R.string.no_number);
         }
 
-        PackageManager packageManager = getActivity().getPackageManager();
+        PackageManager packageManager = Objects.requireNonNull(getActivity()).getPackageManager();
         if (packageManager.resolveActivity(pickContact,
                 PackageManager.MATCH_DEFAULT_ONLY) == null) {
             mSuspectButton.setEnabled(false);
@@ -282,12 +280,14 @@ public class CrimeFragment extends Fragment {
 
     private void onClickPhoto(View v) {
         DialogFragment dialog = CrimePhotoFragment.newInstance(mPhotoFile);
+        if (getActivity() == null) return;
         dialog.show(getActivity().getSupportFragmentManager(), DIALOG_PHOTO);
     }
 
     private void onClickCall(View v) {
         Uri number = Uri.parse(String
                 .format(getString(R.string.call_tel), mCallButton.getText()));
+        if (getActivity() == null) return;
         Intent intentCall = ShareCompat.IntentBuilder.from(getActivity())
                 .getIntent()
                 .setAction(Intent.ACTION_DIAL)
@@ -296,6 +296,7 @@ public class CrimeFragment extends Fragment {
     }
 
     private void onClickReport(View v) {
+        if (getActivity() == null) return;
         Intent intentShare = ShareCompat.IntentBuilder.from(getActivity())
                 .setType("text/plain")
                 .getIntent()
@@ -307,19 +308,19 @@ public class CrimeFragment extends Fragment {
     }
 
     private void onClickDate(View v) {
-        FragmentManager manager = getFragmentManager();
+        mManager = getFragmentManager();
         DatePickerFragment dialog = DatePickerFragment
                 .newInstance(mCrime.getDate());
         dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
-        dialog.show(manager, DIALOG_DATE);
+        dialog.show(mManager, DIALOG_DATE);
     }
 
     private void onClickTime(View v) {
-        FragmentManager manager = getFragmentManager();
+        mManager = getFragmentManager();
         TimePickerFragment dialog = TimePickerFragment
                 .newInstance(mCrime.getDate());
         dialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
-        dialog.show(manager, DIALOG_TIME);
+        dialog.show(mManager, DIALOG_TIME);
     }
 
     private void updateDate() {
@@ -363,10 +364,11 @@ public class CrimeFragment extends Fragment {
 
     private void updatePhotoView() {
         if (mPhotoView == null || !mPhotoFile.exists()) {
-            mPhotoView.setImageDrawable(null);
+            Objects.requireNonNull(mPhotoView).setImageDrawable(null);
             mPhotoView.setContentDescription(
                     getString(R.string.crime_photo_no_image_description));
         } else {
+            if (getActivity() == null) return;
             Bitmap bitmap = PictureUtils.getScaledBitmap(
                     mPhotoFile.getPath(), getActivity());
             mPhotoView.setImageBitmap(bitmap);

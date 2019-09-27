@@ -13,6 +13,7 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Класс TimePickerFragment - фрагмент для ввода времени
@@ -39,7 +40,8 @@ public class TimePickerFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Date date = (Date) getArguments().getSerializable(ARG_TIME);
+        Date date = (Date) Objects.requireNonNull(getArguments())
+                .getSerializable(ARG_TIME);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -53,7 +55,7 @@ public class TimePickerFragment extends DialogFragment {
         mTimePicker.setCurrentHour(hour);
         mTimePicker.setCurrentMinute(minute);
 
-        return new AlertDialog.Builder(getActivity())
+        return new AlertDialog.Builder(Objects.requireNonNull(getActivity()))
                 .setView(v)
                 .setTitle(R.string.time_picker_title)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
@@ -61,7 +63,9 @@ public class TimePickerFragment extends DialogFragment {
                     int minuteDialog = mTimePicker.getCurrentMinute();
                     calendar.set(Calendar.HOUR, hourDialog);
                     calendar.set(Calendar.MINUTE, minuteDialog);
-                    date.setTime(calendar.getTimeInMillis());
+                    if (date != null) {
+                        date.setTime(calendar.getTimeInMillis());
+                    }
                     sendResult(Activity.RESULT_OK, date);
                 })
                 .create();

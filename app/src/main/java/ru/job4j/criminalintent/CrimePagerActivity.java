@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import ru.job4j.criminalintent.model.Crime;
@@ -89,7 +90,8 @@ public class CrimePagerActivity extends AppCompatActivity
                 } else {
                     mFirstPage.setEnabled(true);
                 }
-                if (i == mViewPager.getAdapter().getCount() - 1) {
+                if (i == Objects.requireNonNull(mViewPager.getAdapter())
+                        .getCount() - 1) {
                     mLastPage.setEnabled(false);
                 } else {
                     mLastPage.setEnabled(true);
@@ -107,7 +109,8 @@ public class CrimePagerActivity extends AppCompatActivity
     }
 
     private void onLastClick(View v) {
-        mViewPager.setCurrentItem(mViewPager.getAdapter().getCount() - 1);
+        mViewPager.setCurrentItem(Objects.requireNonNull(mViewPager.getAdapter())
+                .getCount() - 1);
     }
 
     @Override

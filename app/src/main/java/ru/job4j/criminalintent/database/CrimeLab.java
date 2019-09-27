@@ -23,8 +23,8 @@ import ru.job4j.criminalintent.model.Crime;
 public class CrimeLab {
 
     private static CrimeLab sCrimeLab;
-    private Context mContext;
-    private SQLiteDatabase mDatabase;
+    private final Context mContext;
+    private final SQLiteDatabase mDatabase;
 
     public static CrimeLab get(Context context) {
         if (sCrimeLab == null) {
@@ -76,35 +76,28 @@ public class CrimeLab {
     public List<Crime> getCrimes() {
         List<Crime> crimes = new ArrayList<>();
 
-        CrimeCursorWrapper cursor = queryCrimes(null, null);
-
-        try {
+        try (CrimeCursorWrapper cursor = queryCrimes(null, null)) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 crimes.add(cursor.getCrime());
                 cursor.moveToNext();
             }
-        } finally {
-            cursor.close();
         }
 
         return crimes;
     }
 
     public Crime getCrime(UUID id) {
-        CrimeCursorWrapper cursor = queryCrimes(
-                CrimeTable.Cols.UUID + " = ? ",
-                new String[] {id.toString()}
-        );
 
-        try {
+        try (CrimeCursorWrapper cursor = queryCrimes(
+                CrimeTable.Cols.UUID + " = ? ",
+                new String[]{id.toString()}
+        )) {
             if (cursor.getCount() == 0) {
                 return null;
             }
             cursor.moveToFirst();
             return cursor.getCrime();
-        } finally {
-            cursor.close();
         }
     }
 

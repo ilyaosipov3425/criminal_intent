@@ -27,9 +27,9 @@ public class PictureUtils {
         // Вычесление степени масштабирования
         int inSampleSize = 1;
         if (srcHeight > destHeight || srcWidth > destWidth) {
-            float hieghtScale = srcHeight / destHeight;
+            float heightScale = srcHeight / destHeight;
             float widthScale = srcWidth / destWidth;
-            inSampleSize = Math.round(hieghtScale > widthScale ? hieghtScale : widthScale);
+            inSampleSize = Math.round(heightScale > widthScale ? heightScale : widthScale);
         }
 
         options = new BitmapFactory.Options();

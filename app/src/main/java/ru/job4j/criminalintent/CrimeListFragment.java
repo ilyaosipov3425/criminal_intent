@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import ru.job4j.criminalintent.model.Crime;
@@ -105,12 +106,12 @@ public class CrimeListFragment extends Fragment {
     private class CrimeHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        private TextView mTitleTextView;
-        private TextView mDateTextView;
-        private ImageView mSolvedImageView;
+        private final TextView mTitleTextView;
+        private final TextView mDateTextView;
+        private final ImageView mSolvedImageView;
         private Crime mCrime;
 
-        public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
+        private CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_crime, parent, false));
             itemView.setOnClickListener(this);
 
@@ -119,7 +120,7 @@ public class CrimeListFragment extends Fragment {
             mSolvedImageView = itemView.findViewById(R.id.crime_solved);
         }
 
-        public void bind(Crime crime) {
+        private void bind(Crime crime) {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
             mDateTextView.setText(DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.MEDIUM)
@@ -137,7 +138,7 @@ public class CrimeListFragment extends Fragment {
 
         private List<Crime> mCrimes;
 
-        public CrimeAdapter(List<Crime> crimes) {
+        private CrimeAdapter(List<Crime> crimes) {
             mCrimes = crimes;
         }
 
@@ -172,7 +173,7 @@ public class CrimeListFragment extends Fragment {
             return mCrimes.size();
         }
 
-        public void setCrimes(List<Crime> crimes) {
+        private void setCrimes(List<Crime> crimes) {
             mCrimes = crimes;
         }
     }
@@ -198,7 +199,8 @@ public class CrimeListFragment extends Fragment {
                 return true;
             case R.id.show_subtitle:
                 mSubtitleVisible = !mSubtitleVisible;
-                getActivity().invalidateOptionsMenu();
+                Objects.requireNonNull(getActivity())
+                        .invalidateOptionsMenu();
                 updateSubtitle();
                 return true;
             default:
@@ -206,7 +208,7 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
-    public void setCrimeItemTouchListener() {
+    private void setCrimeItemTouchListener() {
         ItemTouchHelper.SimpleCallback itemTouchCallback =
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                     @Override
@@ -230,9 +232,10 @@ public class CrimeListFragment extends Fragment {
                                             boolean isCurrentlyActive) {
                         View itemView = viewHolder.itemView;
 
-                        Drawable deleteIcon = ContextCompat.getDrawable(getContext(),
+                        Drawable deleteIcon = ContextCompat
+                                .getDrawable(Objects.requireNonNull(getContext()),
                                 R.drawable.ic_menu_delete);
-                        float iconHeight = deleteIcon.getIntrinsicHeight();
+                        float iconHeight = Objects.requireNonNull(deleteIcon).getIntrinsicHeight();
                         float iconWidth = deleteIcon.getMinimumWidth();
                         float itemHeight = itemView.getBottom() - itemView.getTop();
 
@@ -286,7 +289,9 @@ public class CrimeListFragment extends Fragment {
         }
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.getSupportActionBar().setSubtitle(subtitle);
+        if (activity == null) return;
+        Objects.requireNonNull(activity.getSupportActionBar())
+                .setSubtitle(subtitle);
     }
 
     @Override

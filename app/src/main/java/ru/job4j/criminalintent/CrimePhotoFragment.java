@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Класс CrimePhotoFragment - выводит на экран увеличенное изображение
@@ -36,12 +37,14 @@ public class CrimePhotoFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        File photoFile = (File) getArguments().getSerializable(FILE_KEY);
+        File photoFile = (File) Objects.requireNonNull(getArguments())
+                .getSerializable(FILE_KEY);
 
         View view = LayoutInflater.from(getActivity())
                 .inflate(R.layout.fragment_crime_photo, null);
         Bitmap bitmap = PictureUtils.getScaledBitmap(
-                photoFile.getPath(), getActivity());
+                Objects.requireNonNull(photoFile).getPath(),
+                Objects.requireNonNull(getActivity()));
 
         ImageView photoView = view.findViewById(R.id.detail_view);
         photoView.setImageBitmap(bitmap);
